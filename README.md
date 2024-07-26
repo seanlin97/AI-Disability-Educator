@@ -28,7 +28,6 @@ This project is an innovative web application designed to enhance the learning e
 
 1. Clone the repository:
    git clone https://github.com/seanlin97/AI-Disability-Educator.git
-   cd AMD-Project-Sean
 
 2. Create and activate a virtual environment:
    python -m venv venv
