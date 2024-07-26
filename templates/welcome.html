@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AMD Project Sean</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to AMD Project Sean</h1>
+        <p>Please select your interface:</p>
+        <button onclick="location.href='/student/visual'">Visual Disability</button>
+        <button onclick="location.href='/student/hearing'">Hearing Disability</button>
+        <button onclick="location.href='/student/speaking'">Speaking Disability</button>
+        <button onclick="location.href='/teacher'">Teacher Interface</button>
+    </div>
+</body>
+</html>

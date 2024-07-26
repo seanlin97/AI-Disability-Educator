@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AMD Project Sean</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>AMD Project Sean</h1>
+    
+    <h2>Text-to-Speech</h2>
+    <textarea id="textInput" rows="4" cols="50"></textarea>
+    <button onclick="textToSpeech()">Generate Speech</button>
+    <audio id="audioPlayer" controls></audio>
+
+    <h2>Speech-to-Text</h2>
+    <input type="file" id="audioFile" accept="audio/*">
+    <button onclick="speechToText()">Transcribe</button>
+    <p id="transcription"></p>
+
+    <script>
+        function textToSpeech() {
+            var text = $('#textInput').val();
+            
+            $.ajax({
+                url: '/text_to_speech',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({text: text}),
+                success: function(response) {
+                    $('#audioPlayer').attr('src', 'data:audio/wav;base64,' + response.audio);
+                }
+            });
+        }
+
+        function speechToText() {
+            var formData = new FormData();
+            formData.append('audio', $('#audioFile')[0].files[0]);
+            
+            $.ajax({
+                url: '/speech_to_text',
+                type: 'POST',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    $('#transcription').text(response.text);
+                }
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Interface</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 95vh;
+            max-height: 95vh;
+        }
+        .content {
+            display: flex;
+            flex: 1;
+            min-height: 0;
+        }
+        .box {
+            flex: 1;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            position: relative;
+        }
+        .box-content {
+            flex: 1;
+            min-height: 95%;
+            overflow-y: auto;
+            word-wrap: break-word;
+        }
+        .box-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #888;
+            font-size: 24px;
+            pointer-events: none;
+        }
+        .control-area {
+            padding: 10px;
+        }
+        button {
+            margin-right: 10px;
+        }
+        @keyframes flash {
+            0%, 50%, 100% { background-color: #fff; }
+            25%, 75% { background-color: #ffcccc; }
+        }
+        .flash {
+            animation: flash 2s;
+        }
+    </style>
+</head>
+<body class="teacher">
+    <div class="container">
+        <div class="control-area">
+            <button onclick="startLecture()">Start Recording Lecture</button>
+            <button onclick="endLecture()">Stop Recording Lecture</button>
+        </div>
+        <div class="content">
+            <div class="box">
+                <div class="box-title" id="lecture-title">Lecture Transcript</div>
+                <div class="box-content" id="lecture-transcript"></div>
+            </div>
+            <div class="box">
+                <div class="box-title" id="questions-title">Student Questions</div>
+                <div class="box-content" id="questions-display"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var socket = io();
+        var recognition;
+        
+        socket.on('transcript_update', function(data) {
+            $('#lecture-transcript').text(data.text);
+            if (data.text) {
+                $('#lecture-title').hide();
+            } else {
+                $('#lecture-title').show();
+            }
+        });
+        
+        socket.on('new_question', function(data) {
+            var currentContent = $('#questions-display').html();
+            $('#questions-display').html(currentContent + '<p>' + data.question + '</p>');
+            if ($('#questions-display').html()) {
+                $('#questions-title').hide();
+            }
+            $('body').addClass('flash');
+            setTimeout(function() {
+                $('body').removeClass('flash');
+            }, 2000);
+        });
+        
+        function startLecture() {
+            recognition = new webkitSpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            
+            recognition.onresult = function(event) {
+                var interim_transcript = '';
+                for (var i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        socket.emit('transcript_update', {text: event.results[i][0].transcript});
+                    } else {
+                        interim_transcript += event.results[i][0].transcript;
+                    }
+                }
+            };
+            
+            recognition.start();
+        }
+        
+        function endLecture() {
+            if (recognition) {
+                recognition.stop();
+            }
+        }
+    </script>
+</body>
+</html>
