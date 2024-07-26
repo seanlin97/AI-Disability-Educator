@@ -4,16 +4,17 @@
 This project is an innovative web application designed to enhance the learning experience for students with disabilities. It provides real-time speech-to-text transcription of lectures, text-to-speech capabilities, and AI-assisted question answering. The project aims to create an inclusive classroom environment where students with visual, hearing, or speaking impairments can participate fully and effectively.
 
 ## Bill of Materials (BOM)
-- Computer or server to host the application
+- AMD Ryzen™ AI Powered PC to host the application
 - Microphone for speech input (for the teacher interface)
 - Speakers or headphones for audio output (for students)
 - Web browser-enabled devices for students and teachers
+- ROCm supported AMD GPUs (Recommended)
 
 ## Software Requirements
 - Python 3.8+
 - Flask
 - Flask-SocketIO
-- PyTorch
+- PyTorch 
 - Transformers (Hugging Face)
 - SpeechT5 (for Text-to-Speech)
 - Whisper (for Speech-to-Text)
