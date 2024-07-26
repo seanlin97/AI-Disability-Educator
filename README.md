@@ -40,7 +40,7 @@ This project is an innovative web application designed to enhance the learning e
    - Follow the installation instructions at Ollama's GitHub repository (https://github.com/ollama/ollama)
    - Ensure the Ollama service is running
 
-5. Start the Flask application:
+5. Start the Flask application in the folder path:
    python app.py
 
 6. Access the application by opening a web browser and navigating to http://localhost:5000
